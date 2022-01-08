@@ -4,12 +4,18 @@ jade/LevelScene.java
  jade.LevelScene
 Main.java
  Main
-util/Time.java
- util.Time
+jade/Camera.java
+ jade.Camera
 jade/MouseListener.java
  jade.MouseListener
 jade/Scene.java
  jade.Scene
+util/Time.java
+ util.Time
+renderer/Shader.java
+ renderer.Shader
+renderer/Texture.java
+ renderer.Texture
 jade/Window.java
  jade.Window
 jade/LevelEditorScene.java
