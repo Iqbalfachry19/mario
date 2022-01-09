@@ -13,6 +13,7 @@ public class Window {
    private int width, height;
     private String title;
     private long glfwWindow;
+    private ImGuiLayer imguiLayer;
     public float r,g,b,a;
     private boolean fadeToBlack = false;
     private static  Window window = null;
@@ -21,9 +22,9 @@ public class Window {
 this.width = 1920;
 this.height = 1080;
 this.title = "Mario";
-r =0;
-b=0;
-g=0;
+r =1;
+b=1;
+g=1;
 a=1;
     }
     public static  void changeScene(int newScene){
@@ -82,12 +83,22 @@ glfwSetErrorCallback(null).free();
        glfwSetMouseButtonCallback(glfwWindow,MouseListener::mouseButtonCallback);
        glfwSetScrollCallback(glfwWindow,MouseListener::mouseScrollCallback);
 glfwSetKeyCallback(glfwWindow,KeyListener::keyCallback);
+glfwSetWindowSizeCallback(glfwWindow,(w,newWidth,newHeight)->{
+Window.setWidth(newWidth);
+Window.setHeight(newHeight);
+});
+
        glfwMakeContextCurrent(glfwWindow);
        glfwSwapInterval(1);
 glfwShowWindow(glfwWindow);
         GL.createCapabilities();
+        glEnable(GL_BLEND);
+glBlendFunc(GL_ONE,GL_ONE_MINUS_SRC_ALPHA);
+this.imguiLayer = new ImGuiLayer(glfwWindow);
+this.imguiLayer.initImGui();
         Window.changeScene(0);
     }
+
     public void loop(){
         float beginTime = (float)glfwGetTime();
         float endTime ;
@@ -99,10 +110,24 @@ while (!glfwWindowShouldClose(glfwWindow)){
 if(dt>=0) {
     currentScene.update(dt);
 }
+this.imguiLayer.update(dt);
     glfwSwapBuffers(glfwWindow);
  endTime = (float)glfwGetTime();
  dt = endTime - beginTime;
  beginTime = endTime;
 }
+    }
+    public static int getWidth() {
+        return get().width;
+    }
+
+    public static int getHeight() {
+        return get().height;
+    }
+    public static void setWidth(int newWidth){
+        get().width =newWidth;
+    }
+    public static void setHeight(int newHeight){
+        get().height = newHeight;
     }
 }

@@ -14,7 +14,7 @@ import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
-public class RenderBatch {
+public class RenderBatch implements  Comparable<RenderBatch> {
 private final int POS_SIZE =2;
 private final int COLOR_SIZE =4;
 private final int TEX_COORDS_SIZE =2;
@@ -36,8 +36,10 @@ private List<Texture> textures;
 private int vaoID, vboID;
 private  int maxBatchSize;
 private Shader shader;
-public RenderBatch(int maxBatchSize){
+private int zIndex;
 
+public RenderBatch(int maxBatchSize,int zIndex) {
+this.zIndex = zIndex;
 shader = AssetPool.getShader("assets/shaders/default.glsl");
 
     this.sprites = new SpriteRenderer[maxBatchSize];
@@ -87,8 +89,21 @@ public void addSprite(SpriteRenderer spr){
 
 
 public void render(){
-    glBindBuffer(GL_ARRAY_BUFFER,vboID);
-    glBufferSubData(GL_ARRAY_BUFFER,0,vertices);
+    boolean rebufferData = false;
+    for(int i=0;i<numSprites;i++){
+        SpriteRenderer spr = sprites[i];
+        if(spr.isDirty()){
+            loadVertexProperties(i);
+            spr.setClean();
+            rebufferData = true;
+        }
+
+    }
+    if(rebufferData){
+        glBindBuffer(GL_ARRAY_BUFFER,vboID);
+        glBufferSubData(GL_ARRAY_BUFFER,0,vertices);
+    }
+
     shader.use();
     shader.uploadMat4f("uProjection", Window.getScene().camera().getProjectionMatrix());
     shader.uploadMat4f("uView",Window.getScene().camera().getViewMatrix());
@@ -178,4 +193,12 @@ public boolean hasTextureRoom(){
 public boolean hasTexture(Texture tex){
     return this.textures.contains(tex);
 }
+public int zIndex(){
+    return this.zIndex;
+}
+
+    @Override
+    public int compareTo(RenderBatch o) {
+        return Integer.compare(this.zIndex,o.zIndex());
+    }
 }

@@ -3,12 +3,15 @@ package jade;
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 
+
 public class MouseListener {
     private static MouseListener instance;
     private double scrollX,scrollY;
     private  double xPos, yPos, lastY, lastX;
     private boolean mouseButtonPressed[] = new boolean[3];
+
     private boolean isDragging;
+    private int mouseButtonDown = 0;
     private MouseListener(){
         this.scrollX = 0.0;
         this.scrollY = 0.0;
