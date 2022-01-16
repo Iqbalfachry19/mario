@@ -27,7 +27,11 @@ for(int i=0; i<numSprites;i++){
             new Vector2f(leftX,bottomY),
             new Vector2f(leftX,topY),
     };
-    Sprite sprite = new Sprite(this.texture,texCoords);
+    Sprite sprite = new Sprite();
+    sprite.setTexture(this.texture);
+    sprite.setTexCoords(texCoords);
+    sprite.setWidth(spriteWidth);
+    sprite.setHeight(spriteHeight);
     this.sprites.add(sprite);
     currentX += spriteWidth +spacing;
     if(currentX >= texture.getWidth()){
@@ -39,5 +43,8 @@ for(int i=0; i<numSprites;i++){
     }
     public Sprite getSprite(int index){
         return this.sprites.get(index);
+    }
+    public int size(){
+        return sprites.size();
     }
 }

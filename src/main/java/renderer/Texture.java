@@ -12,7 +12,8 @@ public class Texture {
     private String filepath;
     private int texID;
     private int width,height;
-    public Texture(String filepath){
+
+    public void init(String filepath){
         this.filepath = filepath;
         texID = glGenTextures();
         glBindTexture(GL_TEXTURE_2D,texID);
@@ -39,7 +40,7 @@ public class Texture {
         }else{
             assert false : "Error: (Texture) Could not load image '"+filepath+"'";
         }
-stbi_image_free(image);
+        stbi_image_free(image);
     }
     public void bind(){
         glBindTexture(GL_TEXTURE_2D,texID);
@@ -52,5 +53,8 @@ stbi_image_free(image);
     }
     public int getHeight(){
         return this.height;
+    }
+    public int getId(){
+        return  texID;
     }
 }

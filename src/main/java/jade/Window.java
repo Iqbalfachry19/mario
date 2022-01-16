@@ -3,6 +3,9 @@ package jade;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
+import scenes.LevelEditorScene;
+import scenes.LevelScene;
+import scenes.Scene;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
@@ -17,7 +20,7 @@ public class Window {
     public float r,g,b,a;
     private boolean fadeToBlack = false;
     private static  Window window = null;
-    private  static  Scene currentScene ;
+    private  static Scene currentScene ;
     private  Window(){
 this.width = 1920;
 this.height = 1080;
@@ -31,18 +34,19 @@ a=1;
         switch (newScene){
             case 0:
                currentScene = new LevelEditorScene();
-               currentScene.init();
-               currentScene.start();
+
                 break;
             case 1:
                 currentScene = new LevelScene();
-                currentScene.init();
-                currentScene.start();
+
                 break;
             default:
                 assert false : "Unknown scene '"+ newScene+"'";
                 break;
         }
+        currentScene.load();
+        currentScene.init();
+        currentScene.start();
     }
     public static Window get(){
 if(Window.window == null){
@@ -103,6 +107,7 @@ this.imguiLayer.initImGui();
         float beginTime = (float)glfwGetTime();
         float endTime ;
         float dt = -1.0f;
+
 while (!glfwWindowShouldClose(glfwWindow)){
     glfwPollEvents();
     glClearColor(r,g,b,a);
@@ -116,6 +121,7 @@ this.imguiLayer.update(dt,currentScene);
  dt = endTime - beginTime;
  beginTime = endTime;
 }
+currentScene.saveExit();
     }
     public static int getWidth() {
         return get().width;
